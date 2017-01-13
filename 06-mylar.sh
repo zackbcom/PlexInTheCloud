@@ -14,6 +14,39 @@ git clone https://github.com/evilhero/mylar /opt/mylar/
 chown -R $username:$username /opt/sickrage
 
 ## Modify Config File
+sed -i "s/^http_username =.*/http_username = $username/g" /opt/mylar/config.ini
+sed -i "s/^http_password =.*/http_password = $passwd/g" /opt/mylar/config.ini
+sed -i "s/^comicvine_api =.*/comicvine_api = $comicvineAPI/g" /opt/mylar/config.ini
+sed -i "s/^annuals_on =.*/annuals_on = 1/g" /opt/mylar/config.ini
+sed -i "s/^destination_dir =.*/destination_dir = /home/$username/$local/comics/g" /opt/mylar/config.ini
+sed -i "s/^create_folders =.*/create_folders = 1/g" /opt/mylar/config.ini
+sed -i "s/^enforce_perms =.*/enforce_perms = 1/g" /opt/mylar/config.ini
+sed -i "s/^chmod_dir =.*/chmod_dir = 0775/g" /opt/mylar/config.ini
+sed -i "s/^chmod_file =.*/chmod_file = 0660/g" /opt/mylar/config.ini
+sed -i "s/^chowner =.*/chowner = $username/g" /opt/mylar/config.ini
+sed -i "s/^chgroup =.*/chgroup = $username/g" /opt/mylar/config.ini
+sed -i "s/^usenet_retention =.*/usenet_retention = $nsRetention/g" /opt/mylar/config.ini
+sed -i "s/^nzb_startup_search =.*/nzb_startup_search = 1/g" /opt/mylar/config.ini
+sed -i "s/^comic_dir =.*/comic_dir = /home/$username/$encrypted/comics/g" /opt/mylar/config.ini
+sed -i "s/^dupeconstraint =.*/dupeconstraint = filetype-cbz/g" /opt/mylar/config.ini
+sed -i "s/^autowant_all =.*/autowant_all = 1/g" /opt/mylar/config.ini
+sed -i "s/^autowant_upcoming =.*/autowant_upcoming = 1/g" /opt/mylar/config.ini
+sed -i "s/^comic_cover_local =.*/comic_cover_local = 1/g" /opt/mylar/config.ini
+sed -i "s/^correct_metadata =.*/correct_metadata = 0/g" /opt/mylar/config.ini
+sed -i "s/^rename_files =.*/rename_files = 1/g" /opt/mylar/config.ini
+sed -i 's/^folder_format =.*/folder_format = $Series ($Year)/g' /opt/mylar/config.ini
+sed -i 's/^file_format =.*/file_format = $Series $Issue ($Year)/g' /opt/mylar/config.ini
+sed -i "s/^zero_level =.*/zero_level = 1/g" /opt/mylar/config.ini
+sed -i "s/^zero_level_n =.*/zero_level_n = 00x/g" /opt/mylar/config.ini
+sed -i "s/^add_to_csv =.*/add_to_csv = 1/g" /opt/mylar/config.ini
+sed -i "s/^cvinfo =.*/cvinfo = 1/g" /opt/mylar/config.ini
+sed -i "s/^enable_meta =.*/enable_meta = 1/g" /opt/mylar/config.ini
+sed -i "s/^cbr2cbz_only =.*/cbr2cbz_only = 1/g" /opt/mylar/config.ini
+sed -i "s/^ct_tag_cr =.*/ct_tag_cr = 1/g" /opt/mylar/config.ini
+sed -i "s/^ct_tag_cbl =.*/ct_tag_cbl = 1/g" /opt/mylar/config.ini
+sed -i "s/^ct_cbz_overwrite =.*/ct_cbz_overwrite = 1/g" /opt/mylar/config.ini
+sed -i "s/^failed_download_handling =.*/failed_download_handling = 1/g" /opt/mylar/config.ini
+sed -i "s/^failed_auto =.*/failed_auto = 1/g" /opt/mylar/config.ini
 
 ## Systemd Service File
 tee "/etc/systemd/system/mylar.service" > /dev/null <<EOF
@@ -52,7 +85,7 @@ sleep 10s
 rclone move -c /home/$username/$local/comics $encrypted:comics
 
 # Tell Plex to update the Library
-wget http://localhost:32400/library/sections/3/refresh?X-Plex-Token=$plexToken
+#wget http://localhost:32400/library/sections/3/refresh?X-Plex-Token=$plexToken
 
 # Send PP Success code
 exit 93
