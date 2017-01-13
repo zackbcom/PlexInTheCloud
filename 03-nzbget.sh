@@ -56,7 +56,7 @@ sleep 10s
 rclone move -c /home/$username/$local/tv $encrypted:tv
 
 # Tell Plex to update the Library
-#wget http://localhost:32400/library/sections/2/refresh?X-Plex-Token=kp9dTjwxqD8zQyznSBRb
+#wget http://localhost:32400/library/sections/2/refresh?X-Plex-Token=$plexToken
 
 # Send PP Success code
 exit 93
@@ -80,7 +80,7 @@ sleep 10s
 rclone move -c /home/$username/$local/movies $encrypted:movies
 
 # Tell Plex to update the Library
-#wget http://localhost:32400/library/sections/3/refresh?X-Plex-Token=kp9dTjwxqD8zQyznSBRb
+#wget http://localhost:32400/library/sections/3/refresh?X-Plex-Token=$plexToken
 
 # Send PP Success code
 exit 93

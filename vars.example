@@ -32,3 +32,7 @@ nsPassword=""
 nsEncryption="yes"
 nsConnections="20"
 nsRetention="1000"
+
+# ComicVine
+# Optional Mylar / Comic Book Support
+comicvineAPI=""

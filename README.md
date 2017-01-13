@@ -15,6 +15,8 @@ These scripts will install and configure:
     - localhost:8081
 - CouchPotato
     - localhost:5050
+- Mylar
+    - localhost:8090
 - nzbToMedia Post-Processing
 - rclone + crypt
 
@@ -46,6 +48,8 @@ These scripts will install and configure:
 ## FREE
 - Free [Plex](https://www.plex.tv/) Account
 - Free [OpenSubtitles.com](http://www.opensubtitles.org) account
+- Free [ComicVine](https://auth.comicvine.gamespot.com/signup/) account
+    - Only required if you use/install Mylar for comic book support
 - Local ssh key that you'll use to SSH in to your Ubuntu machine
 
 # HOW

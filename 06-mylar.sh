@@ -1,0 +1,75 @@
+#!/bin/bash
+source vars
+
+# We Need Structure!
+mkdir -p /home/$username/$local/comics
+mkdir -p /home/$username/nzbget/completed/comics
+
+# Install Mylar
+## Install Dependencies
+apt-get install python-cherrypy
+
+## Install Mylar
+git clone https://github.com/evilhero/mylar /opt/mylar/
+chown -R $username:$username /opt/sickrage
+
+## Modify Config File
+
+## Systemd Service File
+tee "/etc/systemd/system/mylar.service" > /dev/null <<EOF
+[Unit]
+Description=Mylar - Comic book downloader
+
+[Service]
+Type=forking
+User=$username
+Group=$username
+ExecStart=/usr/bin/python /opt/mylar/Mylar.py --daemon --datadir=/opt/mylar --config=/opt/mylar/config.ini --quiet --nolaunch
+GuessMainPID=no
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+## Start Mylar on Boot
+systemctl daemon-reload
+systemctl start mylar
+systemctl enable mylar
+
+## uploadComics.sh script
+tee "/home/$username/nzbget/scripts/uploadComics.sh" > /dev/null <<EOF
+#!/bin/bash
+
+#######################################
+### NZBGET POST-PROCESSING SCRIPT   ###
+
+# Rclone upload to Amazon Cloud Drive
+
+# Wait for NZBget/Sickrage to finish moving files
+sleep 10s
+
+# Upload
+rclone move -c /home/$username/$local/comics $encrypted:comics
+
+# Tell Plex to update the Library
+wget http://localhost:32400/library/sections/3/refresh?X-Plex-Token=$plexToken
+
+# Send PP Success code
+exit 93
+EOF
+
+chmod +x /home/$username/nzbget/scripts/uploadComics.sh
+
+## Open Ports
+echo ''
+echo "Do you want to allow remote access to Mylar?"
+echo "If so, you need to tell UFW to open the port."
+echo "Otherwise, you can use SSH port forwarding."
+echo ''
+echo "Would you like us to open the port in UFW?"
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) ufw allow 8090; echo ''; echo "Port 8090 open, Mylar is now available over the internet."; echo ''; break;;
+        No ) echo "Port 8090 left closed. You can still access it on your local machine by issuing the following command: ssh $username@$ipaddr -L 8090:localhost:8090"; echo "and then open localhost:8090 on your browser."; exit;;
+    esac
+done
