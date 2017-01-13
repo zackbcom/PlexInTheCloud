@@ -17,6 +17,7 @@ These scripts will install and configure:
     - localhost:5050
 - Mylar
     - localhost:8090
+- ComicReader PlexChannel
 - nzbToMedia Post-Processing
 - rclone + crypt
 

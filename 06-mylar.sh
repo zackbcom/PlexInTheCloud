@@ -106,3 +106,12 @@ select yn in "Yes" "No"; do
         No ) echo "Port 8090 left closed. You can still access it on your local machine by issuing the following command: ssh $username@$ipaddr -L 8090:localhost:8090"; echo "and then open localhost:8090 on your browser."; exit;;
     esac
 done
+
+# Install Plex ComicReader Channel
+wget https://github.com/coryo/ComicReader.bundle/archive/master.zip
+unzip master.zip -d /var/lib/plexmediaserver/Library/Application\ Support/Plex\ Media\ Server/Plug-ins/
+mv /var/lib/plexmediaserver/Library/Application\ Support/Plex\ Media\ Server/Plug-ins/ComicReader.bundle-master /var/lib/plexmediaserver/Library/Application\ Support/Plex\ Media\ Server/Plug-ins/ComicReader.bundle
+rm master.zip
+chown -R $username:$username /var/lib/plexmediaserver/Library/Application\ Support/Plex\ Media\ Server/Plug-ins/ComicReader.bundle
+
+systemctl restart plexmediaserver
