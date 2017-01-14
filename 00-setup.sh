@@ -1,11 +1,16 @@
 #!/bin/bash
-
 source vars
+
+## INFO
+# This script is used to 'bootstrap' your new machine
+# using variables defined in a vars file in the root
+# of this project.
+##
 
 # Stop apt-get from hanging on security updates
 echo 'precedence ::ffff:0:0/96 100' >> /etc/gai.conf
 
-# Update and Upgrade
+# Update and upgrade
 apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
 
 # Set hostname
