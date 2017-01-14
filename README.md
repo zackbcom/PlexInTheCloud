@@ -17,6 +17,9 @@ These scripts will install and configure:
     - localhost:5050
 - Mylar
     - localhost:8090
+- Ubooquity
+    - localhost:2202
+    - localhost:2202/admin
 - ComicReader PlexChannel
 - nzbToMedia Post-Processing
 - rclone + crypt
