@@ -1,11 +1,20 @@
 #!/bin/bash
-
 source vars
 
-# Install dependencies
+## INFO
+# This script installs and configures rclone.
+# Your Amazon Drive will be mounted on boot
+# and encrypted/decrypted on the fly.
+##
+
+#######################
+# Dependencies
+#######################
 apt-get install -y git unionfs-fuse unzip
 
-# Install rclone
+#######################
+# Install
+#######################
 curl -O http://downloads.rclone.org/rclone-current-linux-amd64.zip
 unzip rclone-current-linux-amd64.zip
 cd rclone-*-linux-amd64
@@ -13,7 +22,9 @@ cp rclone /usr/sbin/
 chown root:root /usr/sbin/rclone
 chmod 755 /usr/sbin/rclone
 
-# Configure rclone
+#######################
+# Configure
+#######################
 cat << EOF
 rclone config
 
@@ -79,12 +90,16 @@ select yn in "Yes" "No"; do
     esac
 done
 
-# Create your base directories
+#######################
+# Structure
+#######################
 mkdir -p /home/$username/$encrypted
 mkdir -p /home/$username/$local
 mkdir -p /home/$username/$overlayfuse
 
-# Create your mount script
+#######################
+# Helper Scripts
+#######################
 mkdir -p /home/$username/scripts
 tee "/home/$username/scripts/rcloneMount.sh" > /dev/null <<EOF
 #!/bin/bash
@@ -112,8 +127,9 @@ EOF
 chmod +x /home/$username/scripts/rcloneMount.sh
 chown -R $username:$username /home/$username
 
-# Tell Systemd to mount at boot
-## Create the service file
+#######################
+# Systemd Service File
+#######################
 tee "/etc/systemd/system/rcloneMount.service" > /dev/null <<EOF
 [Unit]
 Description=Mount Amazon Cloud Drive
@@ -132,11 +148,9 @@ Restart=on-abort
 WantedBy=default.target
 EOF
 
-## Start the service & enable it at boot
+#######################
+# Autostart
+#######################
 systemctl daemon-reload
 systemctl start rcloneMount.service
 systemctl enable rcloneMount.service
-
-cat << EOF
-## Now run 02-plex.sh to set up Plex.
-EOF
