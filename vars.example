@@ -36,6 +36,3 @@ nsRetention="1000"
 # ComicVine
 # Optional Mylar / Comic Book Support
 comicvineAPI=""
-
-# Htpasswd
-htpasswd=""

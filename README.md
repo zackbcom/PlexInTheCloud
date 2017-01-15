@@ -9,6 +9,8 @@ These scripts will install and configure:
     - localhost:8181
 - PlexRequests
     - localhost:3000
+- ruTorrent
+    - localhost:6060
 - NZBget
     - localhost:6789
 - SickRage
@@ -73,5 +75,5 @@ A: I deal with all of that for work and I love those tools, but they do have a l
 
 Q: How can I use SSH port forwarding to access all the things?    
 A: Run the following command from your local machine and then open a browser and point to localhost:$PORT.    
-    `ssh $USERNAME@$IP -L 6789:localhost:6789 -L 8081:localhost:8081 -L 5050:localhost:5050 -L 8181:localhost:8181 -L 3000:localhost:3000`
+    `ssh $USERNAME@$IP -L 8888:localhost:32400 -L 6789:localhost:6789 -L 8081:localhost:8081 -L 5050:localhost:5050 -L 8181:localhost:8181 -L 3000:localhost:3000 -L 6060:localhost:6060`
 
