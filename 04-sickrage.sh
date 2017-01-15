@@ -32,6 +32,47 @@ sed -i 's/^SUBTITLES_SERVICES_ENABLED =.*/SUBTITLES_SERVICES_ENABLED = 1|0|0|0|0
 sed -i "s/^use_failed_downloads =.*/use_failed_downloads = 1/g" /opt/sickrage/config.ini
 sed -i "s/^delete_failed =.*/delete_failed = 1/g" /opt/sickrage/config.ini
 
+## Add our upload script that uploads TV to Amazon Cloud Drive
+tee "/home/$username/nzbget/scripts/uploadTV.sh" > /dev/null <<EOF
+#!/bin/bash
+
+#######################################
+### NZBGET POST-PROCESSING SCRIPT   ###
+
+# Rclone upload to Amazon Cloud Drive
+
+# Wait for NZBget/Sickrage to finish moving files
+sleep 10s
+
+# Upload
+rclone move -c /home/$username/$local/tv $encrypted:tv
+
+# Tell Plex to update the Library
+#wget http://localhost:32400/library/sections/2/refresh?X-Plex-Token=$plexToken
+
+# Send PP Success code
+exit 93
+EOF
+
+chmod +x /home/$username/nzbget/scripts/uploadTV.sh
+
+
+# CATEGORIES
+## TV
+sed -i "s/^Category2.Name=.*/Category2.Name=tv/g" /opt/nzbget/nzbget.conf
+sed -i "s|^Category2.DestDir=.*|Category2.DestDir=/home/$username/nzbget/completed/tv|g" /opt/nzbget/nzbget.conf
+sed -i "s/^Category2.PostScript=.*/Category2.PostScript=nzbToSickBeard.py, Logger.py, uploadTV.sh/g" /opt/nzbget/nzbget.conf
+
+# nzbToSickBeard
+sed -i 's/^nzbToSickBeard.py:auto_update=.*/nzbToSickBeard.py:auto_update=1/g' /opt/nzbget/nzbget.conf
+sed -i 's/^nzbToSickBeard.py:sbCategory=.*/nzbToSickBeard.py:sbCategory=tv/g' /opt/nzbget/nzbget.conf
+sed -i 's/^nzbToSickBeard.py:sbdelete_failed=.*/nzbToSickBeard.py:sbdelete_failed=1/g' /opt/nzbget/nzbget.conf
+sed -i 's/^nzbToSickBeard.py:getSubs=.*/nzbToSickBeard.py:getSubs=1/g' /opt/nzbget/nzbget.conf
+sed -i "s/^nzbToSickBeard.py:subLanguages=.*/nzbToSickBeard.py:subLanguages=$openSubtitlesLang/g" /opt/nzbget/nzbget.conf
+sed -i "s/^nzbToSickBeard.py:sbusername=.*/nzbToSickBeard.py:sbusername=$username/g" /opt/nzbget/nzbget.conf
+sed -i "s/^nzbToSickBeard.py:sbpassword=.*/nzbToSickBeard.py:sbpassword=$passwd/g" /opt/nzbget/nzbget.conf
+sed -i "s|^nzbToSickBeard.py:sbwatch_dir=.*|nzbToSickBeard.py:sbwatch_dir=/home/$username/nzbget/completed/tv|g" /opt/nzbget/nzbget.conf
+
 ## Systemd Service file
 cp -v /opt/sickrage/runscripts/init.systemd /etc/systemd/system/sickrage.service
 chown root:root /etc/systemd/system/sickrage.service

@@ -93,6 +93,19 @@ EOF
 
 chmod +x /home/$username/nzbget/scripts/uploadComics.sh
 
+# CATEGORIES
+## Comics
+sed -i "s/^Category4.Name=.*/Category4.Name=comics/g" /opt/nzbget/nzbget.conf
+sed -i "s|^Category4.DestDir=.*|Category4.DestDir=/home/$username/nzbget/completed/comics|g" /opt/nzbget/nzbget.conf
+sed -i "s/^Category4.PostScript=.*/Category4.PostScript=nzbToMylar.py, Logger.py, uploadComics.sh/g" /opt/nzbget/nzbget.conf
+
+# nzbToMylar
+sed -i 's/^nzbToMylar.py:auto_update=.*/nzbToMylar.py:auto_update=1/g' /opt/nzbget/nzbget.conf
+sed -i 's/^nzbToMylar.py:myCategory=.*/nzbToMylar.py:myCategory=comics/g' /opt/nzbget/nzbget.conf
+sed -i "s/^nzbToMylar.py:myusername=.*/nzbToMylar.py:myusername=$username/g" /opt/nzbget/nzbget.conf
+sed -i "s/^nzbToMylar.py:mypassword=.*/nzbToMylar.py:mypassword=$passwd/g" /opt/nzbget/nzbget.conf
+sed -i "s|^nzbToMylar.py:mywatch_dir=.*|nzbToMylar.py:mywatch_dir=/home/$username/nzbget/completed/comics|g" /opt/nzbget/nzbget.conf
+
 ## Open Ports
 echo ''
 echo "Do you want to allow remote access to Mylar?"
