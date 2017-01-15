@@ -150,6 +150,10 @@ EOF
 #######################
 chmod +x /home/$username/scripts
 chown -R $username:$username /home/$username/scripts
+chown -R $username:$username /home/$username/$local
+chown -R $username:$username /home/$username/$encrypted
+chown -R $username:$username /home/$username/$overlayfuse
+
 
 #######################
 # Autostart
