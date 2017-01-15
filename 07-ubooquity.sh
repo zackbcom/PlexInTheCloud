@@ -1,19 +1,30 @@
 #!/bin/bash
 source vars
 
-# STRUCTURE!
-rclone mkdir $encrypted:comics
+## INFO
+# This script installs and configures ubooquity
+##
 
-# Install Dependencies
+#######################
+# Dependencies
+#######################
 apt-get install -y default-jre
 
-# Install Ubooquity
+#######################
+# Install
+#######################
 wget -O ubooquity.zip http://vaemendis.net/ubooquity/service/download.php
 unzip ubooquity.zip -d /opt/ubooquity/
 rm ubooquity.zip
-chown -R $username:$username /opt/ubooquity
 
-## Systemd Service File
+#######################
+# Structure
+#######################
+rclone mkdir $encrypted:comics
+
+#######################
+# Systemd Service File
+#######################
 tee "/etc/systemd/system/ubooquity.service" > /dev/null <<EOF
 [Unit]
 Description=Ubooquity
@@ -30,11 +41,21 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 
-## Start on Boot
+#######################
+# Permissions
+#######################
+chown -R $username:$username /opt/ubooquity
+
+#######################
+# Autostart
+#######################
 systemctl daemon-reload
 systemctl start ubooquity
 systemctl enable ubooquity
 
+#######################
+# Remote Access
+#######################
 echo ''
 echo "Do you want to allow remote access to Ubooquity?"
 echo "If so, you need to tell UFW to open the port."
@@ -47,3 +68,4 @@ select yn in "Yes" "No"; do
         No ) echo "Port 2202 left closed. You can still access it on your local machine by issuing the following command: ssh $username@$ipaddr -L 2202:localhost:2202"; echo "and then open localhost:2202 on your browser."; exit;;
     esac
 done
+
