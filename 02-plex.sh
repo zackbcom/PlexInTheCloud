@@ -13,9 +13,13 @@ dpkg -i plex*.deb
 rm plex*.deb
 
 #######################
-# Systemd Service File
+# Structure
 #######################
 mkdir -p /etc/systemd/system/plexmediaserver.service.d
+
+#######################
+# Systemd Service File
+#######################
 tee "/etc/systemd/system/plexmediaserver.service.d/local.conf" > /dev/null <<EOF
 [Unit]
 Description= Start Plexmediaserver as our user, and don't do it until our mount script has finished.
@@ -26,6 +30,9 @@ User=$username
 Group=$username
 EOF
 
+#######################
+# Permissions
+#######################
 chown -R $username:$username /var/lib/plexmediaserver
 
 #######################

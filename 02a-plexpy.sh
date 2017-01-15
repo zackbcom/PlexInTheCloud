@@ -9,7 +9,6 @@ source vars
 # Install
 #######################
 git clone https://github.com/JonnyWong16/plexpy.git /opt/plexpy/
-chown -R $username:$username /opt/plexpy
 
 #######################
 # Systemd Service File
@@ -29,6 +28,11 @@ Group=$username
 [Install]
 WantedBy=multi-user.target
 EOF
+
+#######################
+# Permissions
+#######################
+chown -R $username:$username /opt/plexpy
 
 #######################
 # Autostart

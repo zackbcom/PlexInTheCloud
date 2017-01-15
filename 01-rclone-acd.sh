@@ -96,11 +96,11 @@ done
 mkdir -p /home/$username/$encrypted
 mkdir -p /home/$username/$local
 mkdir -p /home/$username/$overlayfuse
+mkdir -p /home/$username/scripts
 
 #######################
 # Helper Scripts
 #######################
-mkdir -p /home/$username/scripts
 tee "/home/$username/scripts/rcloneMount.sh" > /dev/null <<EOF
 #!/bin/bash
 rclone mount \
@@ -124,9 +124,6 @@ sleep 3s
 unionfs-fuse -o cow,max_readahead=2000000000 /home/$username/$local=RW:/home/$username/$encrypted=RO /home/$username/$overlayfuse 
 EOF
 
-chmod +x /home/$username/scripts/rcloneMount.sh
-chown -R $username:$username /home/$username
-
 #######################
 # Systemd Service File
 #######################
@@ -147,6 +144,12 @@ Restart=on-abort
 [Install]
 WantedBy=default.target
 EOF
+
+#######################
+# Permissions
+#######################
+chmod +x /home/$username/scripts/rcloneMount.sh
+chown -R $username:$username /home/$username
 
 #######################
 # Autostart
