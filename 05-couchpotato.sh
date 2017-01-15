@@ -16,7 +16,6 @@ pip install lxml cryptography pyopenssl
 # Install
 #######################
 git clone https://github.com/CouchPotato/CouchPotatoServer.git /opt/couchpotato/
-chown -R $username:$username /opt/couchpotato
 
 #######################
 # Configure
@@ -109,6 +108,7 @@ EOF
 #######################
 # Permissions
 #######################
+chown -R $username:$username /opt/couchpotato
 chown -R $username:$username /home/$username/nzbget/completed/movies
 chown -R $username:$username /home/$username/$local/movies
 chmod +x /home/$username/nzbget/scripts/uploadMovies.sh
