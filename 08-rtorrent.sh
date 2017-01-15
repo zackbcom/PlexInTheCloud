@@ -47,10 +47,10 @@ session = /home/$username/rtorrent/session
 schedule = low_diskspace,5,60,close_low_diskspace=1024M
 
 # Port range to use for listening.
-port_range = 55965-55970
+port_range = $torrentPort-$torrentPort
 
 # Start opening ports at a random position within the port range.
-port_random = yes
+port_random = no
 
 # Check hash for finished torrents to confirm that the files are correct
 check_hash = yes
@@ -99,6 +99,11 @@ EOF
 # Permissions
 #######################
 chown -R /home/$username/rtorrent
+
+#######################
+# Remote Access
+#######################
+ufw allow $torrentPort
 
 #######################
 # Autostart
