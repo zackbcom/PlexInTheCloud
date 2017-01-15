@@ -59,7 +59,7 @@ These scripts will install and configure:
 # HOW
 - SSH into your Ubuntu host as **root**
 - Git clone this repo
-- Copy vars.example to vars and modify as needed
+- Rename vars.example to vars and modify as needed
 - Run bash scripts in order
     - Some steps still require manual input. In such cases the scripts will pause tell you what needs to be done and will wait for feedback before continuing. 
     - (EXAMPLE: Enabling remote access for Plex requires manual steps. The script that installs Plex will pause, tell you what to do, and ask you to type "y" once you've completed the manual steps. Once you type "y" the script will continue on it's way.)
