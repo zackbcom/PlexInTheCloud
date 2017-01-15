@@ -1,19 +1,23 @@
 #!/bin/bash
 source vars
 
-# We Need Structure!
-mkdir -p /home/$username/$local/comics
-mkdir -p /home/$username/nzbget/completed/comics
+## INFO
+# Installs and configures mylar
+##
 
-# Install Mylar
-## Install Dependencies
+#######################
+# Dependencies
+#######################
 apt-get install python-cherrypy
 
-## Install Mylar
+#######################
+# Install
+#######################
 git clone https://github.com/evilhero/mylar /opt/mylar/
-chown -R $username:$username /opt/sickrage
 
-## Modify Config File
+#######################
+# Configure
+#######################
 sed -i "s/^http_username =.*/http_username = $username/g" /opt/mylar/config.ini
 sed -i "s/^http_password =.*/http_password = $passwd/g" /opt/mylar/config.ini
 sed -i "s/^comicvine_api =.*/comicvine_api = $comicvineAPI/g" /opt/mylar/config.ini
@@ -48,28 +52,28 @@ sed -i "s/^ct_cbz_overwrite =.*/ct_cbz_overwrite = 1/g" /opt/mylar/config.ini
 sed -i "s/^failed_download_handling =.*/failed_download_handling = 1/g" /opt/mylar/config.ini
 sed -i "s/^failed_auto =.*/failed_auto = 1/g" /opt/mylar/config.ini
 
-## Systemd Service File
-tee "/etc/systemd/system/mylar.service" > /dev/null <<EOF
-[Unit]
-Description=Mylar - Comic book downloader
+## Post Processing
+## NZBget
+sed -i "s/^Category4.Name=.*/Category4.Name=comics/g" /opt/nzbget/nzbget.conf
+sed -i "s|^Category4.DestDir=.*|Category4.DestDir=/home/$username/nzbget/completed/comics|g" /opt/nzbget/nzbget.conf
+sed -i "s/^Category4.PostScript=.*/Category4.PostScript=nzbToMylar.py, Logger.py, uploadComics.sh/g" /opt/nzbget/nzbget.conf
 
-[Service]
-Type=forking
-User=$username
-Group=$username
-ExecStart=/usr/bin/python /opt/mylar/Mylar.py --daemon --datadir=/opt/mylar --config=/opt/mylar/config.ini --quiet --nolaunch
-GuessMainPID=no
+# nzbToMylar
+sed -i 's/^nzbToMylar.py:auto_update=.*/nzbToMylar.py:auto_update=1/g' /opt/nzbget/nzbget.conf
+sed -i 's/^nzbToMylar.py:myCategory=.*/nzbToMylar.py:myCategory=comics/g' /opt/nzbget/nzbget.conf
+sed -i "s/^nzbToMylar.py:myusername=.*/nzbToMylar.py:myusername=$username/g" /opt/nzbget/nzbget.conf
+sed -i "s/^nzbToMylar.py:mypassword=.*/nzbToMylar.py:mypassword=$passwd/g" /opt/nzbget/nzbget.conf
+sed -i "s|^nzbToMylar.py:mywatch_dir=.*|nzbToMylar.py:mywatch_dir=/home/$username/nzbget/completed/comics|g" /opt/nzbget/nzbget.conf
 
-[Install]
-WantedBy=multi-user.target
-EOF
+#######################
+# Structure
+#######################
+mkdir -p /home/$username/$local/comics
+mkdir -p /home/$username/nzbget/completed/comics
 
-## Start Mylar on Boot
-systemctl daemon-reload
-systemctl start mylar
-systemctl enable mylar
-
-## uploadComics.sh script
+#######################
+# Helper Scripts
+#######################
 tee "/home/$username/nzbget/scripts/uploadComics.sh" > /dev/null <<EOF
 #!/bin/bash
 
@@ -91,22 +95,40 @@ rclone move -c /home/$username/$local/comics $encrypted:comics
 exit 93
 EOF
 
+#######################
+# Systemd Service File
+#######################
+tee "/etc/systemd/system/mylar.service" > /dev/null <<EOF
+[Unit]
+Description=Mylar - Comic book downloader
+
+[Service]
+Type=forking
+User=$username
+Group=$username
+ExecStart=/usr/bin/python /opt/mylar/Mylar.py --daemon --datadir=/opt/mylar --config=/opt/mylar/config.ini --quiet --nolaunch
+GuessMainPID=no
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+#######################
+# Permissions
+#######################
+chown -R $username:$username /opt/sickrage
 chmod +x /home/$username/nzbget/scripts/uploadComics.sh
 
-# CATEGORIES
-## Comics
-sed -i "s/^Category4.Name=.*/Category4.Name=comics/g" /opt/nzbget/nzbget.conf
-sed -i "s|^Category4.DestDir=.*|Category4.DestDir=/home/$username/nzbget/completed/comics|g" /opt/nzbget/nzbget.conf
-sed -i "s/^Category4.PostScript=.*/Category4.PostScript=nzbToMylar.py, Logger.py, uploadComics.sh/g" /opt/nzbget/nzbget.conf
+#######################
+# Autostart
+#######################
+systemctl daemon-reload
+systemctl start mylar
+systemctl enable mylar
 
-# nzbToMylar
-sed -i 's/^nzbToMylar.py:auto_update=.*/nzbToMylar.py:auto_update=1/g' /opt/nzbget/nzbget.conf
-sed -i 's/^nzbToMylar.py:myCategory=.*/nzbToMylar.py:myCategory=comics/g' /opt/nzbget/nzbget.conf
-sed -i "s/^nzbToMylar.py:myusername=.*/nzbToMylar.py:myusername=$username/g" /opt/nzbget/nzbget.conf
-sed -i "s/^nzbToMylar.py:mypassword=.*/nzbToMylar.py:mypassword=$passwd/g" /opt/nzbget/nzbget.conf
-sed -i "s|^nzbToMylar.py:mywatch_dir=.*|nzbToMylar.py:mywatch_dir=/home/$username/nzbget/completed/comics|g" /opt/nzbget/nzbget.conf
-
-## Open Ports
+#######################
+# Remote Access
+#######################
 echo ''
 echo "Do you want to allow remote access to Mylar?"
 echo "If so, you need to tell UFW to open the port."
@@ -119,12 +141,3 @@ select yn in "Yes" "No"; do
         No ) echo "Port 8090 left closed. You can still access it on your local machine by issuing the following command: ssh $username@$ipaddr -L 8090:localhost:8090"; echo "and then open localhost:8090 on your browser."; exit;;
     esac
 done
-
-# Install Plex ComicReader Channel
-wget https://github.com/coryo/ComicReader.bundle/archive/master.zip
-unzip master.zip -d /var/lib/plexmediaserver/Library/Application\ Support/Plex\ Media\ Server/Plug-ins/
-mv /var/lib/plexmediaserver/Library/Application\ Support/Plex\ Media\ Server/Plug-ins/ComicReader.bundle-master /var/lib/plexmediaserver/Library/Application\ Support/Plex\ Media\ Server/Plug-ins/ComicReader.bundle
-rm master.zip
-chown -R $username:$username /var/lib/plexmediaserver/Library/Application\ Support/Plex\ Media\ Server/Plug-ins/ComicReader.bundle
-
-systemctl restart plexmediaserver
