@@ -91,8 +91,6 @@ EOF
 #######################
 # Systemd Service File
 #######################
-cp -v /opt/couchpotato/init/couchpotato.service /etc/systemd/system/couchpotato.service
-
 tee "/etc/systemd/system/couchpotato.service" > /dev/null <<EOF
 [Unit]
 Description=CouchPotato application instance

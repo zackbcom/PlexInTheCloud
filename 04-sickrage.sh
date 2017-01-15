@@ -18,8 +18,6 @@ git clone https://github.com/SickRage/SickRage.git /opt/sickrage/
 #######################
 # Configure
 #######################
-cp -v /opt/sickrage/runscripts/init.systemd /etc/systemd/system/sickrage.service
-
 sed -i "s/^tv_download_dir =.*/tv_download_dir = \/home\/$username\/nzbget\/completed\/tv/g" /opt/sickrage/config.ini
 sed -i "s/^root_dirs =.*/root_dirs = 0|\/home\/$username\/$overlayfuse\/tv/g" /opt/sickrage/config.ini
 sed -i "s|naming_pattern =.*|naming_pattern = Season %0S\\\%S_N-S%0SE%0E-%E_N-%Q_N|g" /opt/sickrage/config.ini
@@ -82,14 +80,6 @@ exit 93
 EOF
 
 #######################
-# Permissions
-#######################
-chown -R $username:$username /opt/sickrage
-chmod +x /home/$username/nzbget/scripts/uploadTV.sh
-chown root:root /etc/systemd/system/sickrage.service
-chmod 644 /etc/systemd/system/sickrage.service
-
-#######################
 # Systemd Service File
 #######################
 tee "/etc/systemd/system/sickrage.service" > /dev/null <<EOF
@@ -108,6 +98,14 @@ ExecStart=/usr/bin/python2.7 /opt/sickrage/SickBeard.py -q --daemon --nolaunch -
 [Install]
 WantedBy=multi-user.target
 EOF
+
+#######################
+# Permissions
+#######################
+chown -R $username:$username /opt/sickrage
+chmod +x /home/$username/nzbget/scripts/uploadTV.sh
+chown root:root /etc/systemd/system/sickrage.service
+chmod 644 /etc/systemd/system/sickrage.service
 
 #######################
 # Autostart

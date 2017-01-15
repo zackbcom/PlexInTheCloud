@@ -82,15 +82,6 @@ mkdir -p /home/$username/nzbget/tmp
 mkdir -p /home/$username/nzbget/scripts
 
 #######################
-# Permissions
-#######################
-chown -R $username:$username /opt/nzbget
-
-systemctl stop rcloneMount.service
-chown -R $username:$username /home/$username
-systemctl start rcloneMount.service
-
-#######################
 # Systemd Service File
 #######################
 tee "/etc/systemd/system/nzbget.service" > /dev/null <<EOF
@@ -113,6 +104,15 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
+
+#######################
+# Permissions
+#######################
+chown -R $username:$username /opt/nzbget
+
+systemctl stop rcloneMount.service
+chown -R $username:$username /home/$username
+systemctl start rcloneMount.service
 
 #######################
 # Autostart
