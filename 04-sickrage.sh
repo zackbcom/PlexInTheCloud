@@ -1,16 +1,25 @@
 #!/bin/bash
 source vars
 
-# Install Sickrage
-## Install dependencies
+## INFO
+# This script installs and configures sickrage
+##
+
+#######################
+# Dependencies
+#######################
 apt-get install -y unrar-free git-core openssl libssl-dev python2.7
 
-## Install Sickrage
-mkdir /opt/sickrage
+#######################
+# Install
+#######################
 git clone https://github.com/SickRage/SickRage.git /opt/sickrage/
-chown -R $username:$username /opt/sickrage
 
-## Modify config file
+#######################
+# Configure
+#######################
+cp -v /opt/sickrage/runscripts/init.systemd /etc/systemd/system/sickrage.service
+
 sed -i "s/^tv_download_dir =.*/tv_download_dir = \/home\/$username\/nzbget\/completed\/tv/g" /opt/sickrage/config.ini
 sed -i "s/^root_dirs =.*/root_dirs = 0|\/home\/$username\/$overlayfuse\/tv/g" /opt/sickrage/config.ini
 sed -i "s|naming_pattern =.*|naming_pattern = Season %0S\\\%S_N-S%0SE%0E-%E_N-%Q_N|g" /opt/sickrage/config.ini
@@ -32,7 +41,25 @@ sed -i 's/^SUBTITLES_SERVICES_ENABLED =.*/SUBTITLES_SERVICES_ENABLED = 1|0|0|0|0
 sed -i "s/^use_failed_downloads =.*/use_failed_downloads = 1/g" /opt/sickrage/config.ini
 sed -i "s/^delete_failed =.*/delete_failed = 1/g" /opt/sickrage/config.ini
 
-## Add our upload script that uploads TV to Amazon Cloud Drive
+## Post-Processing
+# nzbget
+sed -i "s/^Category2.Name=.*/Category2.Name=tv/g" /opt/nzbget/nzbget.conf
+sed -i "s|^Category2.DestDir=.*|Category2.DestDir=/home/$username/nzbget/completed/tv|g" /opt/nzbget/nzbget.conf
+sed -i "s/^Category2.PostScript=.*/Category2.PostScript=nzbToSickBeard.py, Logger.py, uploadTV.sh/g" /opt/nzbget/nzbget.conf
+
+# nzbToSickBeard
+sed -i 's/^nzbToSickBeard.py:auto_update=.*/nzbToSickBeard.py:auto_update=1/g' /opt/nzbget/nzbget.conf
+sed -i 's/^nzbToSickBeard.py:sbCategory=.*/nzbToSickBeard.py:sbCategory=tv/g' /opt/nzbget/nzbget.conf
+sed -i 's/^nzbToSickBeard.py:sbdelete_failed=.*/nzbToSickBeard.py:sbdelete_failed=1/g' /opt/nzbget/nzbget.conf
+sed -i 's/^nzbToSickBeard.py:getSubs=.*/nzbToSickBeard.py:getSubs=1/g' /opt/nzbget/nzbget.conf
+sed -i "s/^nzbToSickBeard.py:subLanguages=.*/nzbToSickBeard.py:subLanguages=$openSubtitlesLang/g" /opt/nzbget/nzbget.conf
+sed -i "s/^nzbToSickBeard.py:sbusername=.*/nzbToSickBeard.py:sbusername=$username/g" /opt/nzbget/nzbget.conf
+sed -i "s/^nzbToSickBeard.py:sbpassword=.*/nzbToSickBeard.py:sbpassword=$passwd/g" /opt/nzbget/nzbget.conf
+sed -i "s|^nzbToSickBeard.py:sbwatch_dir=.*|nzbToSickBeard.py:sbwatch_dir=/home/$username/nzbget/completed/tv|g" /opt/nzbget/nzbget.conf
+
+#######################
+# Helper Scripts
+#######################
 tee "/home/$username/nzbget/scripts/uploadTV.sh" > /dev/null <<EOF
 #!/bin/bash
 
@@ -54,31 +81,17 @@ rclone move -c /home/$username/$local/tv $encrypted:tv
 exit 93
 EOF
 
+#######################
+# Permissions
+#######################
+chown -R $username:$username /opt/sickrage
 chmod +x /home/$username/nzbget/scripts/uploadTV.sh
-
-
-# CATEGORIES
-## TV
-sed -i "s/^Category2.Name=.*/Category2.Name=tv/g" /opt/nzbget/nzbget.conf
-sed -i "s|^Category2.DestDir=.*|Category2.DestDir=/home/$username/nzbget/completed/tv|g" /opt/nzbget/nzbget.conf
-sed -i "s/^Category2.PostScript=.*/Category2.PostScript=nzbToSickBeard.py, Logger.py, uploadTV.sh/g" /opt/nzbget/nzbget.conf
-
-# nzbToSickBeard
-sed -i 's/^nzbToSickBeard.py:auto_update=.*/nzbToSickBeard.py:auto_update=1/g' /opt/nzbget/nzbget.conf
-sed -i 's/^nzbToSickBeard.py:sbCategory=.*/nzbToSickBeard.py:sbCategory=tv/g' /opt/nzbget/nzbget.conf
-sed -i 's/^nzbToSickBeard.py:sbdelete_failed=.*/nzbToSickBeard.py:sbdelete_failed=1/g' /opt/nzbget/nzbget.conf
-sed -i 's/^nzbToSickBeard.py:getSubs=.*/nzbToSickBeard.py:getSubs=1/g' /opt/nzbget/nzbget.conf
-sed -i "s/^nzbToSickBeard.py:subLanguages=.*/nzbToSickBeard.py:subLanguages=$openSubtitlesLang/g" /opt/nzbget/nzbget.conf
-sed -i "s/^nzbToSickBeard.py:sbusername=.*/nzbToSickBeard.py:sbusername=$username/g" /opt/nzbget/nzbget.conf
-sed -i "s/^nzbToSickBeard.py:sbpassword=.*/nzbToSickBeard.py:sbpassword=$passwd/g" /opt/nzbget/nzbget.conf
-sed -i "s|^nzbToSickBeard.py:sbwatch_dir=.*|nzbToSickBeard.py:sbwatch_dir=/home/$username/nzbget/completed/tv|g" /opt/nzbget/nzbget.conf
-
-## Systemd Service file
-cp -v /opt/sickrage/runscripts/init.systemd /etc/systemd/system/sickrage.service
 chown root:root /etc/systemd/system/sickrage.service
 chmod 644 /etc/systemd/system/sickrage.service
 
-## Start sickrage at boot
+#######################
+# Systemd Service File
+#######################
 tee "/etc/systemd/system/sickrage.service" > /dev/null <<EOF
 [Unit]
 Description=SickRage Daemon
@@ -96,10 +109,16 @@ ExecStart=/usr/bin/python2.7 /opt/sickrage/SickBeard.py -q --daemon --nolaunch -
 WantedBy=multi-user.target
 EOF
 
+#######################
+# Autostart
+#######################
 systemctl daemon-reload
 systemctl start sickrage
 systemctl enable sickrage
 
+#######################
+# Remote Access
+#######################
 echo ''
 echo "Do you want to allow remote access to Sickrage?"
 echo "If so, you need to tell UFW to open the port."
@@ -112,8 +131,3 @@ select yn in "Yes" "No"; do
         No ) echo "Port 8081 left closed. You can still access it on your local machine by issuing the following command: ssh $username@$ipaddr -L 8081:localhost:8081"; echo "and then open localhost:8081 on your browser."; exit;;
     esac
 done
-
-
-cat << EOF
-## Now run 05-couchpotato.sh to set up CouchPotato.
-EOF
