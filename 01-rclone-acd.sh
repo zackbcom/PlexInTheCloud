@@ -148,8 +148,8 @@ EOF
 #######################
 # Permissions
 #######################
-chmod +x /home/$username/scripts/rcloneMount.sh
-chown -R $username:$username /home/$username
+chmod +x /home/$username/scripts
+chown -R $username:$username /home/$username/scripts
 
 #######################
 # Autostart
