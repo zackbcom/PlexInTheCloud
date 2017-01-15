@@ -62,7 +62,7 @@ These scripts will install and configure:
 [Wiki](https://github.com/chrisanthropic/PlexInTheCloud/wiki)
 
 # TODO
-[Issues](is:open is:issue label:enhancement)
+[Issues](https://github.com/chrisanthropic/PlexInTheCloud/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement)
 
 # FAQ
 Q: Why bash rather than Docker/Ansible/Saltstack/Chef/Puppet/your-personal-favorite-thing    
