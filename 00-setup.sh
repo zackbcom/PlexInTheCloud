@@ -7,6 +7,12 @@ source vars
 # of this project.
 ##
 
+# Make sure we are root
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root. Execute 'sudo su' to swap to the root user." 
+   exit 1
+fi
+
 # Stop apt-get from hanging on security updates
 echo 'precedence ::ffff:0:0/96 100' >> /etc/gai.conf
 

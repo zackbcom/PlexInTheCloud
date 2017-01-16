@@ -6,6 +6,14 @@ source vars
 ##
 
 #######################
+# Pre-Install
+#######################
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root. Execute 'sudo su' to swap to the root user." 
+   exit 1
+fi
+
+#######################
 # Dependencies
 #######################
 apt-get install -y default-jre
