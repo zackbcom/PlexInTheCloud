@@ -10,7 +10,8 @@ source vars
 #######################
 exec sudo -i -u $username /bin/bash - << eof
 curl "https://install.meteor.com/?release=1.2.1" | sh
-git clone https://github.com/lokenx/plexrequests-meteor.git /opt/plexrequests/
+sudo git clone https://github.com/lokenx/plexrequests-meteor.git /opt/plexrequests/
+sudo chown -R $username:$username /opt/plexrequests
 cd /opt/plexrequests
 meteor &
 PID=$!
