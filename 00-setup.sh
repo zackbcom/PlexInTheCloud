@@ -43,8 +43,8 @@ adduser $username sudo
 sed --in-place 's/^#\s*\(%sudo\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/' /etc/sudoers
 
 # Install & Configure SSH
-sed -z 's/PermitRootLogin yes\|$/PermitRootLogin no/' /etc/ssh/sshd_config
-sed -z 's/PasswordAuthentication yes\|$/PasswordAuthentication no/' /etc/ssh/sshd_config
+sed -i "s/.*PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config
+sed -i "s/.*PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config
 echo 'AddressFamily inet' | sudo tee -a /etc/ssh/sshd_config
 systemctl restart sshd
 
