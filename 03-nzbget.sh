@@ -29,8 +29,14 @@ rm unrarsrc-5.2.7.tar.gz
 #######################
 # Install
 #######################
-NZBGETLATEST=$(wget http://nzbget.net/download/ -O - | grep run | awk -F "[\"]" '{print $4}' | head -n1)
-wget $NZBGETLATEST -O nzbget-latest-bin-linux.run
+if [ "$nzbGetTesting" == "yes" ]; then
+  nzbGetVersion="testing-download"
+else
+  nzbGetVersion="stable-download"
+fi
+wget -O - http://nzbget.net/info/nzbget-version-linux.json | \
+sed -n "s/^.*$nzbGetVersion.*: \"\(.*\)\".*/\1/p" | \
+wget --no-check-certificate -i - -O nzbget-latest-bin-linux.run
 sh nzbget-latest-bin-linux.run --destdir /opt/nzbget
 rm nzbget-latest-bin-linux.run
 
