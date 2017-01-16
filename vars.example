@@ -18,6 +18,9 @@ plexToken=""
 plexUsername=""
 plexPassword=""
 
+# NZBGet
+nzbGetTesting="no"
+
 # OpenSubTitles
 openSubtitlesUsername=""
 openSubtitlesPassword=""
