@@ -17,13 +17,13 @@ fi
 # Install
 #######################
 if [ -n "$plexToken" ]; then
-    wget "https://plex.tv/downloads/latest/1?channel=16&build=linux-ubuntu-x86_64&distro=ubuntu&X-Plex-Token=$plexToken"
+    wget -O plex.deb "https://plex.tv/downloads/latest/1?channel=16&build=linux-ubuntu-x86_64&distro=ubuntu&X-Plex-Token=$plexToken"
 else
-    wget "https://plex.tv/downloads/latest/1?channel=16&build=linux-ubuntu-x86_64&distro=ubuntu"
+    wget -O plex.deb "https://plex.tv/downloads/latest/1?channel=16&build=linux-ubuntu-x86_64&distro=ubuntu"
 fi
 
-dpkg -i plex*.deb
-rm plex*.deb
+dpkg -i plex.deb
+rm plex.deb
 
 #######################
 # Structure
