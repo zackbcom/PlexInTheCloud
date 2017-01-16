@@ -8,6 +8,7 @@ source vars
 #######################
 # Dependencies
 #######################
+apt-get install -y build-essential
 wget rarlab.com/rar/unrarsrc-5.2.7.tar.gz
 tar -xvf unrarsrc-5.2.7.tar.gz
 cd unrar
