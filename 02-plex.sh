@@ -67,7 +67,7 @@ echo ''
 echo "You need to manually enable remote management for Plex."
 echo "Issue the following command on your LOCAL machine:"
 echo "ssh $username@$ipaddr -L 8888:localhost:32400"
-echo "open `localhost:8888/web` in a browser"
+echo 'open localhost:8888/web in a browser'
 echo "Either login or create a new Plex account."
 echo "Now enable remote access: Remote Access ->> Enable"
 echo ''

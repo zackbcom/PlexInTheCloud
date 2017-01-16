@@ -112,7 +112,7 @@ EOF
 chown -R $username:$username /opt/nzbget
 
 systemctl stop rcloneMount.service
-chown -R $username:$username /home/$username
+chown -R $username:$username /home/$username/nzbget
 systemctl start rcloneMount.service
 
 #######################
