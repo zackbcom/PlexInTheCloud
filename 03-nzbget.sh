@@ -6,6 +6,14 @@ source vars
 ##
 
 #######################
+# Pre-Install
+#######################
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root. Execute 'sudo su' to swap to the root user." 
+   exit 1
+fi
+
+#######################
 # Dependencies
 #######################
 wget rarlab.com/rar/unrarsrc-5.2.7.tar.gz

@@ -6,6 +6,14 @@ source vars
 ##
 
 #######################
+# Pre-Install
+#######################
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root. Execute 'sudo su' to swap to the root user." 
+   exit 1
+fi
+
+#######################
 # Install
 #######################
 wget https://downloads.plex.tv/plex-media-server/1.3.3.3148-b38628e/plexmediaserver_1.3.3.3148-b38628e_amd64.deb

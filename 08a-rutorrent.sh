@@ -6,6 +6,14 @@ source vars
 ##
 
 #######################
+# Pre-Install
+#######################
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root. Execute 'sudo su' to swap to the root user." 
+   exit 1
+fi
+
+#######################
 # Dependencies
 #######################
 apt-get install -y nginx php php-cli php-fpm php-xmlrpc apache2-utils mediainfo unrar-free ffmpeg unzip
