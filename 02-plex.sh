@@ -16,9 +16,14 @@ fi
 #######################
 # Install
 #######################
-wget https://downloads.plex.tv/plex-media-server/1.3.3.3148-b38628e/plexmediaserver_1.3.3.3148-b38628e_amd64.deb
-dpkg -i plex*.deb
-rm plex*.deb
+if [ -n "$plexToken" ]; then
+    wget -O plex.deb "https://plex.tv/downloads/latest/1?channel=16&build=linux-ubuntu-x86_64&distro=ubuntu&X-Plex-Token=$plexToken"
+else
+    wget -O plex.deb "https://plex.tv/downloads/latest/1?channel=16&build=linux-ubuntu-x86_64&distro=ubuntu"
+fi
+
+dpkg -i plex.deb
+rm plex.deb
 
 #######################
 # Structure
