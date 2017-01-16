@@ -36,10 +36,6 @@ fi
 wget -O - http://nzbget.net/info/nzbget-version-linux.json | \
 sed -n "s/^.*$nzbGetVersion.*: \"\(.*\)\".*/\1/p" | \
 wget --no-check-certificate -i - -O nzbget-latest-bin-linux.run
-
-
-NZBGETLATEST=$(wget http://nzbget.net/download/ -O - | grep run | awk -F "[\"]" '{print $4}' | head -n1)
-wget $NZBGETLATEST -O nzbget-latest-bin-linux.run
 sh nzbget-latest-bin-linux.run --destdir /opt/nzbget
 rm nzbget-latest-bin-linux.run
 
