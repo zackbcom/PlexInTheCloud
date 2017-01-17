@@ -53,6 +53,9 @@ sed -i "s/^MainDir=.*/MainDir=/home/$username/nzbget/g" /opt/nzbget/nzbget.conf
 sed -i 's|^DestDir=.*|DestDir=${MainDir}/completed|g' /opt/nzbget/nzbget.conf
 sed -i 's|^InterDir=.*|InterDir=${MainDir}/intermediate|g' /opt/nzbget/nzbget.conf
 
+## CATEGORIES
+sed -i '/Category4.Name=Software/aCategory5.Name=Anime' /opt/nzbget/nzbget.conf
+
 ## NEWS-SERVERS
 sed -i "s/^Server1.Active=.*/Server1.Active=yes/g" /opt/nzbget/nzbget.conf
 sed -i "s/^Server1.Name=.*/Server1.Name=$newsServer/g" /opt/nzbget/nzbget.conf
@@ -64,7 +67,7 @@ sed -i "s/^Server1.Encryption=.*/Server1.Encryption=$nsEncryption/g" /opt/nzbget
 sed -i "s/^Server1.Connections=.*/Server1.Connections=$nsConnections/g" /opt/nzbget/nzbget.conf
 sed -i "s/^Server1.Retention=.*/Server1.Retention=$nsRetention/g" /opt/nzbget/nzbget.conf
 
-## SECURITy
+## SECURITY
 sed -i "s/^ControlUsername=.*/ControlUsername=$username/g" /opt/nzbget/nzbget.conf
 sed -i "s/^ControlPassword=.*/ControlPassword=$passwd/g" /opt/nzbget/nzbget.conf
 sed -i "s/^DaemonUsername=.*/DaemonUsername=$username/g" /opt/nzbget/nzbget.conf## Copy default config file
