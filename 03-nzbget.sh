@@ -55,7 +55,7 @@ sed -i 's|^DestDir=.*|DestDir=${MainDir}/completed|g' /opt/nzbget/nzbget.conf
 sed -i 's|^InterDir=.*|InterDir=${MainDir}/intermediate|g' /opt/nzbget/nzbget.conf
 
 ## CATEGORIES
-sed -i '/Category4.Name=Software/aCategory5.Name=Anime' /opt/nzbget/nzbget.conf
+sed -i '/Category4.Name=Software/aCategory5.Name=anime' /opt/nzbget/nzbget.conf
 
 ## NEWS-SERVERS
 sed -i "s/^Server1.Active=.*/Server1.Active=yes/g" /opt/nzbget/nzbget.conf
@@ -71,7 +71,9 @@ sed -i "s/^Server1.Retention=.*/Server1.Retention=$nsRetention/g" /opt/nzbget/nz
 ## SECURITY
 sed -i "s/^ControlUsername=.*/ControlUsername=$username/g" /opt/nzbget/nzbget.conf
 sed -i "s/^ControlPassword=.*/ControlPassword=$passwd/g" /opt/nzbget/nzbget.conf
-sed -i "s/^DaemonUsername=.*/DaemonUsername=$username/g" /opt/nzbget/nzbget.conf## Copy default config file
+sed -i "s/^DaemonUsername=.*/DaemonUsername=$username/g" /opt/nzbget/nzbget.conf
+
+## Copy default config file
 cp /home/$username/nzbget/scripts/autoProcessMedia.cfg.spec /home/$username/nzbget/scripts/autoProcessMedia.cfg
 
 ## DOWNLOAD QUEUE
