@@ -73,9 +73,6 @@ sed -i "s/^ControlUsername=.*/ControlUsername=$username/g" /opt/nzbget/nzbget.co
 sed -i "s/^ControlPassword=.*/ControlPassword=$passwd/g" /opt/nzbget/nzbget.conf
 sed -i "s/^DaemonUsername=.*/DaemonUsername=$username/g" /opt/nzbget/nzbget.conf
 
-## Copy default config file
-cp /home/$username/nzbget/scripts/autoProcessMedia.cfg.spec /home/$username/nzbget/scripts/autoProcessMedia.cfg
-
 ## DOWNLOAD QUEUE
 sed -i "s/^ArticleCache=.*/ArticleCache=1900/g" /opt/nzbget/nzbget.conf
 sed -i "s/^WriteBuffer=.*/WriteBuffer=1024/g" /opt/nzbget/nzbget.conf
