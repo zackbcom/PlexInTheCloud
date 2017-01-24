@@ -46,7 +46,7 @@ ln -sf /usr/bin/python2.7 /usr/bin/python2
 # Configure
 #######################
 ## Tell nzbget to start as the default user
-sed -i "/DaemonUsername=/c\DaemonUsername=$username" /opt/nzbget/nzbget.conf
+sed -i "s|^DaemonUsername=.*|DaemonUsername=$username|g" /opt/nzbget/nzbget.conf
 
 ### Modify config file
 ## PATHS
@@ -126,10 +126,7 @@ EOF
 # Permissions
 #######################
 chown -R $username:$username /opt/nzbget
-
-systemctl stop rcloneMount.service
 chown -R $username:$username /home/$username/nzbget
-systemctl start rcloneMount.service
 
 #######################
 # Autostart
