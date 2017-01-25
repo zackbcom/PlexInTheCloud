@@ -28,3 +28,15 @@ git clone https://github.com/clinton-hall/nzbToMedia.git /home/$username/nzbget/
 #######################
 cp /opt/nzbget/scripts/* /home/$username/nzbget/scripts/
 cp /home/$username/nzbget/scripts/autoProcessMedia.cfg.spec /home/$username/nzbget/scripts/autoProcessMedia.cfg
+
+#######################
+# Permissions
+#######################
+chown -R $username:$username /home/$username/nzbget/scripts
+
+#######################
+# Misc.
+#######################
+# Restart NZBget
+systemctl stop nzbget
+systemctl start nzbget

@@ -50,9 +50,10 @@ sed -i "s|^DaemonUsername=.*|DaemonUsername=$username|g" /opt/nzbget/nzbget.conf
 
 ### Modify config file
 ## PATHS
-sed -i "s/^MainDir=.*/MainDir=/home/$username/nzbget/g" /opt/nzbget/nzbget.conf
+sed -i "s|^MainDir=.*|MainDir=/home/$username/nzbget|g" /opt/nzbget/nzbget.conf
 sed -i 's|^DestDir=.*|DestDir=${MainDir}/completed|g' /opt/nzbget/nzbget.conf
 sed -i 's|^InterDir=.*|InterDir=${MainDir}/intermediate|g' /opt/nzbget/nzbget.conf
+sed -i 's|^ScriptDir=.*|ScriptDir=${MainDir}/scripts|g' /opt/nzbget/nzbget.conf
 
 ## CATEGORIES
 sed -i '/Category4.Name=Software/aCategory5.Name=anime' /opt/nzbget/nzbget.conf
@@ -146,7 +147,7 @@ echo ''
 echo "Would you like us to open the port in UFW?"
 select yn in "Yes" "No"; do
     case $yn in
-        Yes ) ufw allow 6789; echo ''; echo "Port 6789 open, NZBget is now available over the internet."; echo ''; break;;
+        Yes ) ufw allow 6789; echo ''; echo "Port 6789 open, NZBget is now available over the internet at $ipaddr:6789."; echo ''; break;;
         No ) echo "Port 6789 left closed. You can still access it on your local machine by issuing the following command: ssh $username@$ipaddr -L 6789:localhost:6789"; echo "and then open localhost:6789 on your browser."; exit;;
     esac
 done
